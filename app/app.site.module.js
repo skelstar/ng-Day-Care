@@ -1,5 +1,5 @@
 angular
-    .module('appSite', ['ui.router'])
+    .module('appSite', ['ui.router', 'textAngular'])
     .config(function ($stateProvider, $urlRouterProvider) {
         "use strict";
         
@@ -13,6 +13,11 @@ angular
             .state('page2', {
                 url: "/page2",
                 templateUrl: "partials/page2.html"
+            })
+            .state('editorTest', {
+                url: "/editor-test",
+                templateUrl: "partials/editorTest.html"
+            
             });
         
     });
