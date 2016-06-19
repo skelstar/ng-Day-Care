@@ -19,10 +19,8 @@
     <script src="assets/js/textAngular-sanitize.min.js"></script>
     <script src="assets/js/textAngular.min.js"></script>
 
-<!--
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
     <script src="https://cdn.firebase.com/libs/angularfire/1.1.3/angularfire.min.js"></script>
--->
 
     <script src="app/app.site.module.js"></script>
     <script src="app/shared/app.data.service.js"></script>
@@ -35,6 +33,8 @@
     <a ui-sref="page2">Page 2</a>
     <a ui-sref="editorTest">Editor Test</a>
 
+    <p ng-if="site.isSignedIn()">Signed in</p>
+    
     <div ui-view></div>
  
 </body>
