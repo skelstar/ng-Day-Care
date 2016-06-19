@@ -1,5 +1,5 @@
 angular
-    .module('appSite', ['ui.router', 'textAngular'])
+    .module('appSite', ['ui.router', 'textAngular', 'firebase'])
     .config(function ($stateProvider, $urlRouterProvider) {
         "use strict";
         
@@ -20,4 +20,9 @@ angular
             
             });
         
-    });
+    })
+    .run(['$rootScope', '$http', function ($rootScope, $http) {
+        "use strict";
+
+
+    }]);

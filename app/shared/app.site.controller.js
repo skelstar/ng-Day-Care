@@ -2,21 +2,57 @@ angular
     .module('appSite')
     .controller('SiteController', SiteController);
 
-function SiteController($scope, DataService) {
+function SiteController($scope, $rootScope, DataService, $firebaseAuth) {
     "use strict";
     
-    $scope.htmlContent = '<h2>Try me!</h2><p>textAngular is a super cool WYSIWYG Text Editor directive for AngularJS</p><p><b>Features:</b></p><ol><li>Automatic Seamless Two-Way-Binding</li><li style="color: blue;">Super Easy <b>Theming</b> Options</li><li>Simple Editor Instance Creation</li><li>Safely Parses Html for Custom Toolbar Icons</li><li>Doesn&apos;t Use an iFrame</li><li>Works with Firefox, Chrome, and IE8+</li></ol><p><b>Code at GitHub:</b> <a href="https://github.com/fraywing/textAngular">Here</a> </p>';
-    
-    activate();
+    $scope.htmlContent = '<h2>Try me!</h2><p>textAngular is a super cool WYSIWYG Text Editor</p>';
+    $scope.test = "test win";
+    this.isSignedIn = function () {
+                        var signedIn = $scope.auth.$getAuth();
+                        return signedIn != null;
+                      };
 
+    this.getSignInByEmail = function (email, password) {
+                                return $scope.auth.$authWithPassword(
+                                {
+                                    email: email,
+                                    password: password
+                                });
+                            };
+
+    $scope.signIn = function () {
+        
+        $scope.auth.$authWithPassword({ email: $scope.email, password: $scope.password})
+                    .then(function (authData) {
+                        alert("Successfully logged in");
+                    })
+                    .catch(function( error) {
+                        console.log("Authentication failed: " + error.message);
+                    });
+    }
+    
+    $scope.$on('$stateChangeSuccess', 
+        function(event, toState, toParams, fromState, fromParams) {  
+        }
+    );
+    
+
+    activate();
+    
     function activate() {
         
         DataService
             .getData("assets/data/site.json")
             .then(function (res) {
                 $scope.title = res.data.title; 
-            });
-
+                var ref = new Firebase(res.data.firebaseAuthPath);
+                $scope.auth = $firebaseAuth(ref);
+            });     
+        
+        $scope.email = "skelstar@gmail.com";
+        $scope.password = "ec11225f87";
     }
+    
+    
     
 }
