@@ -1,9 +1,13 @@
 <p>Page 2</p>
 
-<label for="signinEmail">Email</label>
-<input id="signinEmail" type="text" ng-model="email" value="skelstar@gmail.com" />
+<form name="loginForm" ng-submit="signIn(credentials)" novalidate ng-show="isSignedIn() == false">
 
-<label for="signinPassword">Password</label>
-<input id="signinPassword" type="password" ng-model="password" />
+    <label for="signinEmail">Email:</label>
+    <input id="signinEmail" type="text" ng-model="credentials.email" value="skelstar@gmail.com" />
 
-<button ng-click="signIn()">Sign in</button>
+    <label for="signinPassword">Password:</label>
+    <input id="signinPassword" type="password" ng-model="credentials.password" />
+
+    <button type="submit">Sign in</button>
+
+</form>

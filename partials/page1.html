@@ -1,8 +1,13 @@
 
-<text-angular name="htmlContent" ng-model="htmlContent"></text-angular>
+<button ng-click="toggleEdit()">Toggle</button> 
+<p ng-show="edit == true">Edit</p>
+<p ng-show="edit == false">Display</p>
+<p ng-show="isSignedIn()">Signed In</p>
+
+<text-angular name="htmlContent" ng-model="htmlContent" ng-show="editMode()"></text-angular>
 
 
-<div class="panel panel-default myEditable">
+<div class="panel panel-default myEditable" ng-show="displayMode()">
     
     <div ta-bind="text" ng-model="htmlContent" ta-readonly='disabled'></div>
 

@@ -1,58 +1,70 @@
-angular
-    .module('appSite')
-    .controller('SiteController', SiteController);
-
-function SiteController($scope, $rootScope, DataService, $firebaseAuth) {
+function SiteController($scope, $rootScope, DataService, $firebaseAuth, AUTHEVENTS) {
     "use strict";
-    
+
     $scope.htmlContent = '<h2>Try me!</h2><p>textAngular is a super cool WYSIWYG Text Editor</p>';
     $scope.test = "test win";
-    this.isSignedIn = function () {
-                        var signedIn = $scope.auth.$getAuth();
-                        return signedIn != null;
-                      };
+    $scope.auth = {};
+    $scope.edit = false;
 
-    this.getSignInByEmail = function (email, password) {
-                                return $scope.auth.$authWithPassword(
-                                {
-                                    email: email,
-                                    password: password
-                                });
-                            };
+    $scope.credentials = {
+        email: '',
+        password: ''
+    };
 
-    $scope.signIn = function () {
-        
-        $scope.auth.$authWithPassword({ email: $scope.email, password: $scope.password})
-                    .then(function (authData) {
-                        alert("Successfully logged in");
-                    })
-                    .catch(function( error) {
-                        console.log("Authentication failed: " + error.message);
-                    });
+    $scope.isSignedIn = function () {
+        return $rootScope.loggedIn == true;
+    };
+    
+    $scope.editMode = function () {
+        return $scope.edit && $scope.isSignedIn();
+    };
+    
+    $scope.displayMode = function () {
+        return $scope.edit == false || $scope.isSignedIn() == false; 
     }
     
-    $scope.$on('$stateChangeSuccess', 
-        function(event, toState, toParams, fromState, fromParams) {  
+    $scope.toggleEdit = function () {
+        if ($scope.isSignedIn) {
+            $scope.edit = !$scope.edit;
+        } else {
+            $scope.edit = false;
         }
-    );
-    
+    };
+
+    $scope.getSignInByEmail = function (email, password) {
+        return $scope.auth.$authWithPassword({
+            email: $scope.credentials.email,
+            password: $scope.credentials.password
+        });
+    };
+
+    $scope.signIn = function (creds) {
+
+        $scope.auth.$authWithPassword({
+            email: creds.email,
+            password: creds.password
+        }).then(function (authData) {
+            $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
+            $rootScope.loggedIn = true;
+        }).catch(function (error) {
+            $rootScope.$broadcast(AUTHEVENTS.loginFailed);
+            $rootScope.loggedIn = false;
+        });
+    };
 
     activate();
-    
+
     function activate() {
-        
+
         DataService
             .getData("assets/data/site.json")
             .then(function (res) {
-                $scope.title = res.data.title; 
+                $scope.title = res.data.title;
                 var ref = new Firebase(res.data.firebaseAuthPath);
                 $scope.auth = $firebaseAuth(ref);
-            });     
-        
-        $scope.email = "skelstar@gmail.com";
-        $scope.password = "ec11225f87";
+            });
+
+        $scope.credentials.email = "skelstar@gmail.com";
+        $scope.credentials.password = "ec11225f87";
     }
-    
-    
-    
 }
